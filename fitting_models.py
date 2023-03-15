@@ -52,13 +52,17 @@ class Fitter:
         mask = ~np.isnan(self.x)
         x, y = self.x[mask], self.y[mask]
         splitted_x, splitted_y = utils.split_array(x,SPLIT_SIZE), utils.split_array(y,SPLIT_SIZE)
-        self.fitted_data = {"acordionicity": []}
+        self.fitted_data = {"acordionicity": [], "locations": []}
         for i in range(len(splitted_x)):
-            accordionicity = np.abs((splitted_y[i][-1]-splitted_y[i][0])/(splitted_x[i][-1]-splitted_x[i][0]))
-            self.fitted_data["acordionicity"].append(accordionicity)
+            accordionicity = (splitted_y[i][-1]-splitted_y[i][0])/(splitted_x[i][-1]-splitted_x[i][0])
+            self.fitted_data["acordionicity"].append(np.abs(accordionicity))
             self.fitted_data["locations"].append(splitted_x[i][-1])
             self.fitted_data["start_y"] = self.y[mask][0]
-            self.fitted_data["direction"] = accordionicity/np.abs(accordionicity)
+        if y[-1] > y[0]:
+            self.fitted_data["direction"] = 1
+        else:
+            self.fitted_data["direction"] = -1
+        self.method = MY_METHOD
         return self
 
     def predict(self, x=None):
@@ -97,8 +101,9 @@ class Fitter:
             fitter = self.fit_my()
         else:
             fitter = self.fit_linear()
-        x_to_fit = np.linspace(0, 101, 300)
+        x_to_fit = np.linspace(np.nanmin(self.x), np.nanmax(self.x), 300)
         fitted = fitter.predict(x_to_fit)
+        test_mask = ~np.isnan(x_test) & ~np.isnan(y_test)
         utils.plot_graph_nicely([x, x_to_fit, x_test], [y, fitted, y_test],
                                 cg_name + " " + name_of_type[type] + ", loss = " + str(
-                                    round(fitter.score(x_test, y_test), 2)))
+                                    round(fitter.score(x_test[test_mask], y_test[test_mask]), 2)))
