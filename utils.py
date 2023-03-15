@@ -29,9 +29,9 @@ def plot_graph_nicely(x_s, y_s, title, org=True):
     plt.ylim((0, 100))
     if org:
         plt.title(title)
-
     else:
         plt.title(title + " fitted scale")
+
     plt.xlabel("age")
     plt.ylabel("methylation percentage")
     plt.legend()
@@ -46,3 +46,19 @@ def get_data():
     cg_name = data["cgs"]
     cg_name = np.array([a[0][0] for a in cg_name])
     return ages.flatten(), train, test, cg_name.flatten()
+
+
+def split_array(x, SPLIT_SIZE):
+    final = []
+    for i in range(SPLIT_SIZE):
+        start = int(i*x.shape[0]//SPLIT_SIZE)
+        if i != SPLIT_SIZE-1:
+            end = int((i+1)*x.shape[0]//SPLIT_SIZE)+1
+        else:
+            end = int(x.shape[0])
+        final.append(x[start:end])
+    return final
+
+
+def rescale_array(x, accordionicity, locations):
+    return None
