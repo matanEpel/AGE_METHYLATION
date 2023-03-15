@@ -28,7 +28,7 @@ def plot_graph_nicely(x_s, y_s, title, org=True):
     plt.xlim((0, 100))
     plt.ylim((0, 100))
     if org:
-        plt.title(title + " original scale")
+        plt.title(title)
 
     else:
         plt.title(title + " fitted scale")
