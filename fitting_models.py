@@ -4,7 +4,7 @@ import scipy
 
 import utils
 
-SPLIT_SIZE = 8
+SPLIT_SIZE = 16
 NONE = -1
 MY_METHOD = 0
 LINEAR_LOG = 1
