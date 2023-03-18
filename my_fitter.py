@@ -2,7 +2,7 @@ import numpy as np
 
 import utils
 
-SPLIT_SIZE = 8
+SPLIT_SIZE = 7
 
 
 class MY_FITTER:
@@ -15,10 +15,13 @@ class MY_FITTER:
         self.locations = []
         self.acordionicity = []
 
-    def fit(self):
+    def fit(self,optimal=False):
+        self.start_y = 0
+        self.locations = []
+        self.acordionicity = []
         mask = ~np.isnan(self.x)
         x, y = self.x[mask], self.y[mask]
-        splitted_x, splitted_y = utils.split_array(x, SPLIT_SIZE), utils.split_array(y, SPLIT_SIZE)
+        splitted_x, splitted_y = utils.split_array(x,y, SPLIT_SIZE, optimal=optimal)
         for i in range(len(splitted_x)):
             accordionicity = (splitted_y[i][-1] - splitted_y[i][0]) / (splitted_x[i][-1] - splitted_x[i][0])
             self.acordionicity.append(np.abs(accordionicity))

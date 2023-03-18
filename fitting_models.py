@@ -44,8 +44,8 @@ class Fitter:
         self.method = LOG
         return self
 
-    def fit_my(self):
-        self.my_fitter.fit()
+    def fit_my(self, optimal=False):
+        self.my_fitter.fit(optimal=optimal)
         self.method = MY_METHOD
         return self
 
@@ -73,7 +73,7 @@ class Fitter:
         predicted_y = self.predict(x[mask])
         return np.sqrt(np.average(np.power(y[mask] - predicted_y, 2)))
 
-    def create_results_graph(self, x_test, y_test, cg_name="", type=LINEAR):
+    def create_results_graph(self, x_test, y_test, cg_name="", type=LINEAR,optimal=False):
         y = self.y
         x = self.x
 
@@ -82,7 +82,7 @@ class Fitter:
         elif type == LOG:
             fitter = self.fit_log()
         elif type == MY_METHOD:
-            fitter = self.fit_my()
+            fitter = self.fit_my(optimal=optimal)
         else:
             fitter = self.fit_linear()
         x_to_fit = np.linspace(np.nanmin(self.x), np.nanmax(self.x), 300)
