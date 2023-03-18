@@ -87,7 +87,9 @@ class Fitter:
         elif type == LOG:
             fitter = self.fit_log()
         elif type == MY_METHOD:
-            fitter = self.fit_my(optimal=optimal)
+            self.my_fitter.fit()
+            self.my_fitter.create_results_graph(x_test, y_test, cg_name=cg_name, optimal=optimal)
+            return
         else:
             fitter = self.fit_linear()
         x_to_fit = np.linspace(np.nanmin(self.x), np.nanmax(self.x), 300)
