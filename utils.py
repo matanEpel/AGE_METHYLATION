@@ -48,16 +48,22 @@ def get_data():
     return ages.flatten(), train, test, cg_name.flatten()
 
 
-def split_array(x, SPLIT_SIZE):
-    final = []
-    for i in range(SPLIT_SIZE):
-        start = int(i * x.shape[0] // SPLIT_SIZE)
-        if i != SPLIT_SIZE - 1:
-            end = int((i + 1) * x.shape[0] // SPLIT_SIZE) + 1
-        else:
-            end = int(x.shape[0])
-        final.append(x[start:end])
-    return final
+def split_array(x, SPLIT_SIZE, optimal=False):
+    if not optimal:
+        # the basic solution of splitting evenly
+        final = []
+        for i in range(SPLIT_SIZE):
+            start = int(i * x.shape[0] // SPLIT_SIZE)
+            if i != SPLIT_SIZE - 1:
+                end = int((i + 1) * x.shape[0] // SPLIT_SIZE) + 1
+            else:
+                end = int(x.shape[0])
+            final.append(x[start:end])
+        return final
+    else:
+        # splitting optimally using an optimized splitter
+        splitter = OPTIMAL_SPLITTER()
+        return splitter.split(x, SPLIT_SIZE)
 
 
 def rescale_array(x, accordionicity, locations):

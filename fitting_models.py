@@ -1,17 +1,15 @@
 import numpy as np
 from scipy import stats
+from my_fitter import MY_FITTER
 import scipy
 
 import utils
 
-SPLIT_SIZE = 16
 NONE = -1
 MY_METHOD = 0
-LINEAR_LOG = 1
-LOG_LINEAR = 2
 LINEAR = 3
 LOG = 4
-name_of_type = {MY_METHOD: "my", LINEAR_LOG: "linear-log", LINEAR: "linear", LOG: "log", LOG_LINEAR: "log-linear"}
+name_of_type = {MY_METHOD: "my", LINEAR: "linear", LOG: "log"}
 
 
 class Fitter:
@@ -21,9 +19,7 @@ class Fitter:
         self.y = y[mask]
         self.method = None
         self.fitted_data = {}
-
-    def fit_common(self):
-        return self
+        self.my_fitter = MY_FITTER(x, y)
 
     def fit_linear(self):
         self.fitted_data = {}
@@ -49,19 +45,7 @@ class Fitter:
         return self
 
     def fit_my(self):
-        mask = ~np.isnan(self.x)
-        x, y = self.x[mask], self.y[mask]
-        splitted_x, splitted_y = utils.split_array(x,SPLIT_SIZE), utils.split_array(y,SPLIT_SIZE)
-        self.fitted_data = {"acordionicity": [], "locations": []}
-        for i in range(len(splitted_x)):
-            accordionicity = (splitted_y[i][-1]-splitted_y[i][0])/(splitted_x[i][-1]-splitted_x[i][0])
-            self.fitted_data["acordionicity"].append(np.abs(accordionicity))
-            self.fitted_data["locations"].append(splitted_x[i][-1])
-            self.fitted_data["start_y"] = self.y[mask][0]
-        if y[-1] > y[0]:
-            self.fitted_data["direction"] = 1
-        else:
-            self.fitted_data["direction"] = -1
+        self.my_fitter.fit()
         self.method = MY_METHOD
         return self
 
@@ -75,8 +59,8 @@ class Fitter:
         elif self.method == LOG:
             return self.fitted_data["a"] * np.log(self.fitted_data["b"] * (x + self.fitted_data["c"]))
         elif self.method == MY_METHOD:
-            new_x = utils.rescale_array(x, self.fitted_data["acordionicity"], self.fitted_data["locations"])
-            return self.fitted_data["start_y"] + self.fitted_data["direction"] * new_x
+            return self.my_fitter.predict(x)
+
         else:
             return None
 
