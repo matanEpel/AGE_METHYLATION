@@ -6,6 +6,8 @@ import utils
 SPLIT_SIZE = 7
 
 
+# TODO - make this fitter better (for edge cases)
+
 class MY_FITTER:
     def __init__(self, x, y):
         mask = ~np.isnan(x) & ~np.isnan(y)
@@ -72,6 +74,7 @@ class MY_FITTER:
                                     round(fitter.score(x_test[test_mask], y_test[test_mask]), 2)))
 
     def get_type(self):
+        # TODO - write this function
         my_type = None
 
         return my_type
