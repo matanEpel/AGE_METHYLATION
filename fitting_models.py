@@ -22,10 +22,9 @@ class Fitter:
         self.my_fitter = MY_FITTER(x, y)
 
     def create_age_aacordionicity_graph(self):
-        if self.method == MY_METHOD:
-            self.my_fitter.create_age_aacordionicity_graph()
-        else:
-            print("method is unavailable")
+        self.my_fitter.fit(optimal=True)
+        self.my_fitter.create_age_aacordionicity_graph()
+
 
     def fit_linear(self):
         self.fitted_data = {}
