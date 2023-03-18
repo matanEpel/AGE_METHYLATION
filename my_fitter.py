@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 import utils
 
@@ -33,6 +34,16 @@ class MY_FITTER:
             self.direction = -1
         return self
 
-    def predict(self, x):
+    def predict(self, x=None):
         new_x = utils.rescale_array(x, self.acordionicity, self.locations)
         return self.start_y + self.direction * new_x
+
+    def create_age_aacordionicity_graph(self):
+        x = [0, self.locations[0]] + [x for pair in zip(self.locations[1:],self.locations[1:]) for x in pair]+[100]
+        y = [self.acordionicity[0]]+[x for pair in zip(self.acordionicity,self.acordionicity) for x in pair]
+        plt.plot(x, y)
+        plt.title("acordionicity by age")
+        plt.xlabel("age")
+        plt.ylabel("acordionicity")
+        plt.legend()
+        plt.show()

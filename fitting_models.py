@@ -21,6 +21,12 @@ class Fitter:
         self.fitted_data = {}
         self.my_fitter = MY_FITTER(x, y)
 
+    def create_age_aacordionicity_graph(self):
+        if self.method == MY_METHOD:
+            self.my_fitter.create_age_aacordionicity_graph()
+        else:
+            print("method is unavailable")
+
     def fit_linear(self):
         self.fitted_data = {}
         gradient, intercept, r_value, p_value, slope_std_error = stats.linregress(self.x, self.y)
@@ -73,7 +79,7 @@ class Fitter:
         predicted_y = self.predict(x[mask])
         return np.sqrt(np.average(np.power(y[mask] - predicted_y, 2)))
 
-    def create_results_graph(self, x_test, y_test, cg_name="", type=LINEAR,optimal=False):
+    def create_results_graph(self, x_test, y_test, cg_name="", type=LINEAR, optimal=False):
         y = self.y
         x = self.x
 
