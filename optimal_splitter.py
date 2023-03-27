@@ -2,6 +2,8 @@ from copy import copy
 
 import utils
 import numpy as np
+from scipy import stats
+
 
 
 class OPTIMAL_SPLITTER:
@@ -9,16 +11,22 @@ class OPTIMAL_SPLITTER:
         self.locations = []
 
     def get_score(self, splitted_x, splitted_y):
-        score = 0
-        direction = np.abs(splitted_y[-1][-1]-splitted_y[0][0])/(splitted_y[-1][-1]-splitted_y[0][0])
-        for idx in range(len(splitted_y)):
-            angle = np.abs((splitted_y[idx][-1] - splitted_y[idx][0]) / (splitted_x[idx][-1] - splitted_x[idx][0]))
-            start_y = splitted_y[idx][0]
-            start_x = splitted_x[idx][0]
+        locations = []
+        acordionicity = []
+        x = []
+        y = []
+        for i in range(len(splitted_x)):
+            accordionicity = (splitted_y[i][-1] - splitted_y[i][0]) / (splitted_x[i][-1] - splitted_x[i][0])
+            acordionicity.append(np.abs(accordionicity))
+            locations.append(splitted_x[i][-1])
+            x.append(splitted_x[i][:-1])
+            y.append(splitted_y[i][:-1])
+        x = np.array(x)
+        y = np.array(y)
+        new_x = utils.rescale_array(x, acordionicity, locations)
+        gradient, intercept, r_value, p_value, slope_std_error = stats.linregress(new_x, y)
 
-            for point_idx in range(len(splitted_y[idx])):
-                score += np.abs(splitted_y[idx][point_idx] - (start_y + direction*angle*(splitted_x[idx][point_idx] - start_x))) ** 2
-        return score
+        return np.average((y-(x*gradient+intercept))**2)
 
     def split(self, x, y, split_size):
         curr_splitted_x, curr_splitted_y = utils.split_array(x, y, SPLIT_SIZE=split_size, optimal=False)

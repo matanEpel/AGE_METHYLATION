@@ -12,7 +12,7 @@ def examples():
         x = ages
         fitter = Fitter(x, y)
         fitter.create_results_graph(x, y_test, cg_good_names[i], type=MY_METHOD, optimal=True)
-        fitter.create_age_aacordionicity_graph()
-        fitter.create_results_graph(x, y_test, cg_good_names[i], type=MY_METHOD, optimal=False)
-        fitter.create_results_graph(x, y_test, cg_good_names[i], type=LINEAR, optimal=False)
+        # fitter.create_age_aacordionicity_graph()
+        # fitter.create_results_graph(x, y_test, cg_good_names[i], type=MY_METHOD, optimal=False)
+        # fitter.create_results_graph(x, y_test, cg_good_names[i], type=LINEAR, optimal=False)
         fitter.create_results_graph(x, y_test, cg_good_names[i], type=LOG, optimal=False)
