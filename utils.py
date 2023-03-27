@@ -58,7 +58,7 @@ def split_basic_array(x, SPLIT_SIZE):
             end = int((i + 1) * x.shape[0] // SPLIT_SIZE) + 1
         else:
             end = int(x.shape[0])
-        final.append(x[start:end])
+        final.append(x[start:end].tolist())
     return final
 
 
@@ -69,7 +69,7 @@ def split_array(x, y, SPLIT_SIZE, optimal=False):
     else:
         # splitting optimally using an optimized splitter
         splitter = OPTIMAL_SPLITTER()
-        return splitter.split(x,y, SPLIT_SIZE)
+        return splitter.split_v1(x,y, SPLIT_SIZE)
 
 
 def rescale_array(x, accordionicity, locations):

@@ -41,8 +41,8 @@ class MY_FITTER:
         return self.intercept + self.gradient * new_x
 
     def create_age_aacordionicity_graph(self):
-        x = [0, self.locations[0]] + [x for pair in zip(self.locations[1:], self.locations[1:]) for x in pair] + [100]
-        y = [self.acordionicity[0]] + [x for pair in zip(self.acordionicity, self.acordionicity) for x in pair]
+        x = [0] + [0, self.locations[0]] + [x for pair in zip(self.locations[1:], self.locations[1:]) for x in pair] + [self.x[-1], self.x[-1]]
+        y = [0]+[self.acordionicity[0]] + [x for pair in zip(self.acordionicity, self.acordionicity) for x in pair] + [0]
         plt.plot(x, y)
         plt.title("acordionicity by age")
         plt.xlabel("age")
@@ -60,7 +60,7 @@ class MY_FITTER:
         y = self.y
         x = self.x
 
-        fitter = self.fit()
+        fitter = self.fit(optimal=optimal)
         x_to_fit = np.linspace(np.nanmin(self.x), np.nanmax(self.x), 300)
         fitted = fitter.predict(x_to_fit)
         test_mask = ~np.isnan(x_test) & ~np.isnan(y_test)
@@ -74,7 +74,21 @@ class MY_FITTER:
                                     round(fitter.score(x_test[test_mask], y_test[test_mask]), 2)))
 
     def get_type(self):
-        # TODO - write this function
+        classes = [[0, 20], [20, 40], [40, 60], [60, 80]]
+        types = [1, 2, 3, 4]
+
         my_type = None
 
-        return my_type
+        x_s = np.array(list(i for i in range(80)))
+        y_s = self.predict(x_s)
+
+        down_or_up = (y_s[-1] - y_s[0]) / np.abs(y_s[-1] - y_s[0])
+
+        diffs = np.abs(y_s[1:] - y_s[:-1])
+        total = np.sum(diffs)
+
+        for idx, c in enumerate(classes):
+            if np.sum(diffs[c[0]: c[1]]) / total > 0.6 and total > 40:
+                my_type = types[idx]
+
+        return my_type, down_or_up
