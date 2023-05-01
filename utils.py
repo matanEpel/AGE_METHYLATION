@@ -70,7 +70,7 @@ def split_array(x, y, SPLIT_SIZE, optimal=False):
     else:
         # splitting optimally using an optimized splitter
         splitter = OPTIMAL_SPLITTER()
-        return splitter.split_v1(x,y, SPLIT_SIZE)
+        return splitter.split_v3(x,y, SPLIT_SIZE)
 
 
 def rescale_array(x, accordionicity, locations):

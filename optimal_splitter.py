@@ -4,7 +4,7 @@ import utils
 import numpy as np
 from scipy import stats
 import random
-AMOUNT_OF_RANDOM_LOC = 100
+AMOUNT_OF_RANDOM_LOC = 10
 
 
 class OPTIMAL_SPLITTER:
