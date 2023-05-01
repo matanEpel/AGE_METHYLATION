@@ -4,6 +4,8 @@ import utils
 import numpy as np
 from scipy import stats
 import random
+AMOUNT_OF_RANDOM_LOC = 100
+
 
 class OPTIMAL_SPLITTER:
     def __init__(self):
@@ -33,6 +35,7 @@ class OPTIMAL_SPLITTER:
         return np.average(np.power(y - (new_x * gradient + intercept), 2))
 
     def split_v1(self, x, y, split_size):
+        # optimize by basic split and then moving to different directions
         curr_splitted_x, curr_splitted_y = utils.split_array(x, y, SPLIT_SIZE=split_size, optimal=False)
         curr_score = self.get_score(curr_splitted_x, curr_splitted_y)
 
@@ -44,10 +47,31 @@ class OPTIMAL_SPLITTER:
         return curr_splitted_x, curr_splitted_y
 
     def split_v3(self, x, y, split_size):
-        pass
-        #TODO - start from different random locations, going to best direction
+        optional_locations = self.generate_optional_locations(split_size, np.max(x) + 1)
+        best_score = np.inf
+        best_splitted_x, best_splitted_y = None, None
+        for locations in optional_locations:
+            best_inner_score = np.inf
+            best_inner_splitted_x, best_inner_splitted_y = None, None
+            curr_splitted_x, curr_splitted_y = self.get_split_by_locations(x, y, locations)
+            curr_score = self.get_score(curr_splitted_x, curr_splitted_y, x, y)
+            new_locations = locations
+
+            while curr_score < best_inner_score:
+                best_inner_splitted_x, best_inner_splitted_y = curr_splitted_x, curr_splitted_y
+                best_inner_score = curr_score
+                new_locations = self.get_next_best_location(x, y, new_locations)
+                curr_splitted_x, curr_splitted_y = self.get_split_by_locations(x, y, new_locations)
+                curr_score = self.get_score(curr_splitted_x, curr_splitted_y, x, y)
+
+            if best_inner_score < best_score:
+                best_splitted_x, best_splitted_y = best_inner_splitted_x, best_inner_splitted_y
+                best_score = best_inner_score
+
+        return best_splitted_x, best_splitted_y
 
     def split_v2(self, x, y, split_size):
+        # optimize by trying 100 combinations of locations
         optional_locations = self.generate_optional_locations(split_size, np.max(x)+1)
         best_score = np.inf
         best_splitted_x, best_splitted_y = None, None
@@ -72,6 +96,7 @@ class OPTIMAL_SPLITTER:
                 location_idx += 1
                 splitted_x.append([x[idx]])
                 splitted_y.append([y[idx]])
+        locations.remove(np.inf)
         return splitted_x, splitted_y
 
     def get_next_step_best(self, curr_splitted_x, curr_splitted_y, x, y):
@@ -116,6 +141,25 @@ class OPTIMAL_SPLITTER:
 
     def generate_optional_locations(self, split_size, max_x):
         opt_locations = []
-        for _ in range(100):
+        for _ in range(AMOUNT_OF_RANDOM_LOC):
             opt_locations.append(sorted(random.sample(range(0, max_x),split_size)))
         return  opt_locations
+
+    def get_next_best_location(self, x, y, locations):
+        optional_locs = []
+        for i in range(len(locations)):
+            opt1 = copy(locations)
+            opt2 = copy(locations)
+            opt1[i] += 1
+            opt2[i] -= 1
+            optional_locs.append(opt1)
+            optional_locs.append(opt2)
+        best_score = np.inf
+        best_loc = locations
+        for optional_loc in optional_locs:
+            curr_splitted_x, curr_splitted_y = self.get_split_by_locations(x, y, optional_loc)
+            curr_score = self.get_score(curr_splitted_x, curr_splitted_y, x, y)
+            if curr_score < best_score:
+                best_loc = optional_loc
+                best_score = curr_score
+        return best_loc

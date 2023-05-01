@@ -15,10 +15,11 @@ def get_interesting_points():
     interesting_cgs = []
     ages, train, test, cg_names = get_data()
     for i in range(train.shape[0]):
-        if np.nanmax(train[i]) - np.nanmin(train[i]) >= 55:
+        if np.nanmax(train[i]) - np.nanmin(train[i]) >= 30:
             interesting_points.append(i)
             interesting_cgs.append(cg_names[i])
     return interesting_points, interesting_cgs
+
 
 
 def plot_graph_nicely(x_s, y_s, title, org=True):

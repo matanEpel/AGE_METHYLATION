@@ -88,7 +88,7 @@ class MY_FITTER:
         total = np.sum(diffs)
 
         for idx, c in enumerate(classes):
-            if np.sum(diffs[c[0]: c[1]]) / total > 0.6 and total > 40:
+            if np.sum(diffs[c[0]: c[1]]) / total > 0.4 and total > 30:
                 my_type = types[idx]
 
         return my_type, down_or_up
