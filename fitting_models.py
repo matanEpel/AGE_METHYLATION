@@ -22,7 +22,6 @@ class Fitter:
         self.my_fitter = MY_FITTER(x, y)
 
     def create_age_aacordionicity_graph(self):
-        self.my_fitter.fit(optimal=True)
         self.my_fitter.create_age_aacordionicity_graph()
 
 
