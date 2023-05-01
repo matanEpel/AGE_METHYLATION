@@ -63,14 +63,20 @@ def split_basic_array(x, SPLIT_SIZE):
     return final
 
 
-def split_array(x, y, SPLIT_SIZE, optimal=False):
+def split_array(x, y, SPLIT_SIZE, optimal=False, v=3):
     if not optimal:
         # the basic solution of splitting evenly
         return split_basic_array(x, SPLIT_SIZE), split_basic_array(y, SPLIT_SIZE)
     else:
         # splitting optimally using an optimized splitter
         splitter = OPTIMAL_SPLITTER()
-        return splitter.split_v3(x,y, SPLIT_SIZE)
+        if v == 1:
+            return splitter.split_v1(x, y, SPLIT_SIZE)
+        if v == 2:
+            return splitter.split_v2(x, y, SPLIT_SIZE)
+        if v == 3:
+            return splitter.split_v3(x, y, SPLIT_SIZE)
+
 
 
 def rescale_array(x, accordionicity, locations):

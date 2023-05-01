@@ -49,8 +49,8 @@ class Fitter:
         self.method = LOG
         return self
 
-    def fit_my(self, optimal=False):
-        self.my_fitter.fit(optimal=optimal)
+    def fit_my(self, optimal=False, v=3):
+        self.my_fitter.fit(optimal=optimal, v=v)
         self.method = MY_METHOD
         return self
 
@@ -81,7 +81,7 @@ class Fitter:
     def get_type(self):
         return self.my_fitter.get_type()
 
-    def create_results_graph(self, x_test, y_test, cg_name="", type=LINEAR, optimal=False):
+    def create_results_graph(self, x_test, y_test, cg_name="", type=LINEAR, optimal=False, v=3):
         y = self.y
         x = self.x
 
@@ -90,7 +90,7 @@ class Fitter:
         elif type == LOG:
             fitter = self.fit_log()
         elif type == MY_METHOD:
-            self.my_fitter.create_results_graph(x_test, y_test, cg_name=cg_name, optimal=optimal)
+            self.my_fitter.create_results_graph(x_test, y_test, cg_name=cg_name, optimal=optimal,v=v)
             return
         else:
             fitter = self.fit_linear()

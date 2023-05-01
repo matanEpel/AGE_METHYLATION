@@ -19,13 +19,13 @@ class MY_FITTER:
         self.locations = []
         self.acordionicity = []
 
-    def fit(self, optimal=False):
+    def fit(self, optimal=False, v=3):
         self.start_y = 0
         self.locations = []
         self.acordionicity = []
         mask = ~np.isnan(self.x)
         x, y = self.x[mask], self.y[mask]
-        splitted_x, splitted_y = utils.split_array(x, y, SPLIT_SIZE, optimal=optimal)
+        splitted_x, splitted_y = utils.split_array(x, y, SPLIT_SIZE, optimal=optimal, v=v)
         for i in range(len(splitted_x)):
             accordionicity = (splitted_y[i][-1] - splitted_y[i][0]) / (splitted_x[i][-1] - splitted_x[i][0])
             self.acordionicity.append(np.abs(accordionicity))
@@ -56,11 +56,11 @@ class MY_FITTER:
         predicted_y = self.predict(x[mask])
         return np.sqrt(np.average(np.power(y[mask] - predicted_y, 2)))
 
-    def create_results_graph(self, x_test, y_test, cg_name="", optimal=False):
+    def create_results_graph(self, x_test, y_test, cg_name="", optimal=False,v=3):
         y = self.y
         x = self.x
 
-        fitter = self.fit(optimal=optimal)
+        fitter = self.fit(optimal=optimal,v=v)
         x_to_fit = np.linspace(np.nanmin(self.x), np.nanmax(self.x), 300)
         fitted = fitter.predict(x_to_fit)
         test_mask = ~np.isnan(x_test) & ~np.isnan(y_test)
@@ -70,7 +70,7 @@ class MY_FITTER:
         else:
             name += " not optimal"
         utils.plot_graph_nicely([x, x_to_fit, x_test], [y, fitted, y_test],
-                                cg_name + " " + name + ", loss = " + str(
+                                cg_name + " " + name + " v = " + str(v)+", loss = " + str(
                                     round(fitter.score(x_test[test_mask], y_test[test_mask]), 2)))
 
     def get_type(self):
