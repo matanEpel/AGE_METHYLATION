@@ -21,7 +21,6 @@ def get_interesting_points():
     return interesting_points, interesting_cgs
 
 
-
 def plot_graph_nicely(x_s, y_s, title, org=True):
     plt.scatter(x_s[0], y_s[0], c='g', marker="o", s=30, label="data")
     if len(x_s) > 1:
@@ -78,8 +77,9 @@ def split_array(x, y, SPLIT_SIZE, optimal=False, v=3):
             return splitter.split_v3(x, y, SPLIT_SIZE)
 
 
-
 def rescale_array(x, accordionicity, locations):
+    if len(x) == 0:
+        return x
     final_x = [x[0]]
     last_end = x[0]
     last_loc = last_end
@@ -91,7 +91,7 @@ def rescale_array(x, accordionicity, locations):
             last_end = locations[curr_limit_idx]
             curr_limit_idx += 1
             if curr_limit_idx >= len(locations):
-                rest = np.zeros(x.shape[0]-len(final_x))
+                rest = np.zeros(x.shape[0] - len(final_x))
                 rest.fill(np.nan)
                 return np.concatenate([np.array(final_x), rest])
             last_loc = final_x[idx]

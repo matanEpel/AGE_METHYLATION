@@ -4,7 +4,7 @@ import utils
 import numpy as np
 from scipy import stats
 import random
-AMOUNT_OF_RANDOM_LOC = 100
+AMOUNT_OF_RANDOM_LOC = 200
 
 
 class OPTIMAL_SPLITTER:
@@ -142,7 +142,9 @@ class OPTIMAL_SPLITTER:
     def generate_optional_locations(self, split_size, max_x):
         opt_locations = []
         for _ in range(AMOUNT_OF_RANDOM_LOC):
-            opt_locations.append(sorted(random.sample(range(0, max_x),split_size)))
+            opt = sorted(random.sample(range(0, max_x),split_size))
+            if np.min(np.array(opt[1:]) - np.array(opt[:-1])) >=2:
+                opt_locations.append(opt)
         return  opt_locations
 
     def get_next_best_location(self, x, y, locations):

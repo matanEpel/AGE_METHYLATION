@@ -9,7 +9,8 @@ NONE = -1
 MY_METHOD = 0
 LINEAR = 3
 LOG = 4
-name_of_type = {MY_METHOD: "my", LINEAR: "linear", LOG: "log"}
+MAGE = 5
+name_of_type = {MY_METHOD: "my", LINEAR: "linear", LOG: "log", MAGE: "mAge"}
 
 
 class Fitter:
@@ -24,28 +25,41 @@ class Fitter:
     def create_age_aacordionicity_graph(self):
         self.my_fitter.create_age_aacordionicity_graph()
 
-
-    def fit_linear(self):
-        self.fitted_data = {}
-        gradient, intercept, r_value, p_value, slope_std_error = stats.linregress(self.x, self.y)
+    def fit_linear(self, to_20=False):
+        mask_20 = (self.x > 20)
+        if to_20:
+            gradient, intercept, r_value, p_value, slope_std_error = stats.linregress(self.x[mask_20], self.y[mask_20])
+        else:
+            gradient, intercept, r_value, p_value, slope_std_error = stats.linregress(self.x, self.y)
         self.fitted_data["gradient"] = gradient
         self.fitted_data["intercept"] = intercept
         self.method = LINEAR
         return self
 
-    def fit_log(self):
+    def fit_log(self, to_20=False):
         """ a*exp(b*y)+c """
         mask = (self.x != 0)
+        mask_20 = (self.x <= 20)
         initital_a = -10
         if self.y[-1] > self.y[0]:
             initital_a = 10
-        res = scipy.optimize.curve_fit(lambda t, a, b, c: a * np.log(b * (t + c)), self.x[mask], self.y[mask],
-                                       p0=(initital_a, 1, 0), maxfev=50000)
-        self.fitted_data = {}
+        if to_20:
+            res = scipy.optimize.curve_fit(lambda t, a, b, c: a * np.log(b * (t + c)), self.x[mask & mask_20],
+                                           self.y[mask & mask_20],
+                                           p0=(initital_a, 1, 0), maxfev=500000)
+        else:
+            res = scipy.optimize.curve_fit(lambda t, a, b, c: a * np.log(b * (t + c)), self.x[mask], self.y[mask],
+                                           p0=(initital_a, 1, 0), maxfev=500000)
         self.fitted_data["a"] = res[0][0]
         self.fitted_data["b"] = res[0][1]
         self.fitted_data["c"] = res[0][2]
         self.method = LOG
+        return self
+
+    def fit_mAge(self):
+        self.fit_log(to_20=True)
+        self.fit_linear(to_20=True)
+        self.method = MAGE
         return self
 
     def fit_my(self, optimal=False, v=3):
@@ -62,6 +76,12 @@ class Fitter:
             return self.fitted_data["gradient"] * x + self.fitted_data["intercept"]
         elif self.method == LOG:
             return self.fitted_data["a"] * np.log(self.fitted_data["b"] * (x + self.fitted_data["c"]))
+        elif self.method == MAGE:
+            mask_to = (x <= 20)
+            mask_from = (x > 20)
+            first_part = self.fitted_data["a"] * np.log(self.fitted_data["b"] * (x[mask_to] + self.fitted_data["c"]))
+            second_part = self.fitted_data["gradient"] * x[mask_from] + self.fitted_data["intercept"]
+            return np.concatenate([first_part, second_part])
         elif self.method == MY_METHOD:
             return self.my_fitter.predict(x)
 
@@ -88,8 +108,10 @@ class Fitter:
             fitter = self.fit_linear()
         elif type == LOG:
             fitter = self.fit_log()
+        elif type == MAGE:
+            fitter = self.fit_mAge()
         elif type == MY_METHOD:
-            self.my_fitter.create_results_graph(x_test, y_test, cg_name=cg_name, optimal=optimal,v=v)
+            self.my_fitter.create_results_graph(x_test, y_test, cg_name=cg_name, optimal=optimal, v=v)
             return
         else:
             fitter = self.fit_linear()
