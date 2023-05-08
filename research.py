@@ -79,19 +79,19 @@ def calculate_mse_stats():
 
 
 def clustering():
-    interesting_points, interesting_cgs = utils.get_interesting_points()
-    ages, train, test, cg_names = utils.get_data()
-    vectors = []
-    for i in range(len(cg_names)):
-        print(i)
-        y = train[i]
-        x = ages
-        fitter = Fitter(x, y)
-        fitter.fit_my(optimal=True, v=3)
-        vectors.append(fitter.get_vector())
-    vectors = np.array(vectors)
-    np.save("vectors.npy", vectors)
-    # vectors = np.load("vectors.npy")
+    # interesting_points, interesting_cgs = utils.get_interesting_points()
+    # ages, train, test, cg_names = utils.get_data()
+    # vectors = []
+    # for i in range(len(cg_names)):
+    #     print(i)
+    #     y = train[i]
+    #     x = ages
+    #     fitter = Fitter(x, y)
+    #     fitter.fit_my(optimal=True, v=3)
+    #     vectors.append(fitter.get_vector())
+    # vectors = np.array(vectors)
+    # np.save("all_vectors.npy", vectors)
+    vectors = np.load("all_vectors.npy")
     vectors = vectors[~np.isnan(vectors).any(axis=1)]
     # 165, 174, 206
     c = CLUSTER()
@@ -102,5 +102,11 @@ def clustering():
     plt.show()
     plt.plot(vectors[0])
     plt.show()
-    plt.plot(vectors[-3])
+    plt.plot(vectors[1])
+    plt.show()
+    plt.plot(vectors[2])
+    plt.show()
+    plt.plot(vectors[3])
+    plt.show()
+    plt.plot(vectors[4])
     plt.show()

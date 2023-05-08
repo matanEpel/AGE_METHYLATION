@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 
 KNN = 1
-AMOUNT_OF_GROUPS = 7
+AMOUNT_OF_GROUPS = 5
 MIN_TO_TYPE = 6
 
 class CLUSTER:
