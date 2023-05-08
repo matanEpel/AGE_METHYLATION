@@ -82,7 +82,7 @@ def clustering():
     interesting_points, interesting_cgs = utils.get_interesting_points()
     ages, train, test, cg_names = utils.get_data()
     vectors = []
-    for i in range(1000):
+    for i in range(len(cg_names)):
         print(i)
         y = train[i]
         x = ages
@@ -97,6 +97,7 @@ def clustering():
     c = CLUSTER()
     groups, is_clustered, vectors = c.cluster_pca(vectors)
     groups = groups[is_clustered]
+    print(groups)
     plt.hist(groups, bins=AMOUNT_OF_GROUPS)
     plt.show()
     plt.plot(vectors[0])
