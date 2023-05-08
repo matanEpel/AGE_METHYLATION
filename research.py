@@ -79,28 +79,27 @@ def calculate_mse_stats():
 
 
 def clustering():
-    # interesting_points, interesting_cgs = utils.get_interesting_points()
-    # ages, train, test, cg_names = utils.get_data()
-    # vectors = []
-    # for i in interesting_points:
-    #     print(i)
-    #     y = train[i]
-    #     x = ages
-    #     fitter = Fitter(x, y)
-    #     fitter.fit_my(optimal=True, v=3)
-    #     vectors.append(fitter.get_vector())
-    # vectors = np.array(vectors)
-    # np.save("vectors.npy", vectors)
-    vectors = np.load("vectors.npy")
-    vectors = np.delete(vectors, 165, 0)
-    vectors = np.delete(vectors, 173, 0)
-    vectors = np.delete(vectors, 204, 0)
+    interesting_points, interesting_cgs = utils.get_interesting_points()
+    ages, train, test, cg_names = utils.get_data()
+    vectors = []
+    for i in range(1000):
+        print(i)
+        y = train[i]
+        x = ages
+        fitter = Fitter(x, y)
+        fitter.fit_my(optimal=True, v=3)
+        vectors.append(fitter.get_vector())
+    vectors = np.array(vectors)
+    np.save("vectors.npy", vectors)
+    # vectors = np.load("vectors.npy")
+    vectors = vectors[~np.isnan(vectors).any(axis=1)]
     # 165, 174, 206
     c = CLUSTER()
-    groups, vectors = c.cluster_pca(vectors)
+    groups, is_clustered, vectors = c.cluster_pca(vectors)
+    groups = groups[is_clustered]
     plt.hist(groups, bins=AMOUNT_OF_GROUPS)
     plt.show()
     plt.plot(vectors[0])
     plt.show()
-    plt.plot(vectors[-1])
+    plt.plot(vectors[-3])
     plt.show()
