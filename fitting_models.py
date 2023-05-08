@@ -100,6 +100,9 @@ class Fitter:
     def get_type(self):
         return self.my_fitter.get_type()
 
+    def get_vector(self):
+        return self.my_fitter.get_vector()
+
     def create_results_graph(self, x_test, y_test, cg_name="", type=LINEAR, optimal=False, v=3):
         y = self.y
         x = self.x

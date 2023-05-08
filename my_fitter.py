@@ -92,3 +92,13 @@ class MY_FITTER:
                 my_type = types[idx]
 
         return my_type, down_or_up
+
+    def get_vector(self):
+        final_v = []
+        curr_loc = 0
+        for i in range(80):
+            if i >= self.locations[curr_loc]:
+                curr_loc += 1
+            final_v.append(self.acordionicity[curr_loc]*self.direction)
+
+        return final_v

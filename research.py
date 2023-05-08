@@ -1,6 +1,8 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 import utils
+from clustering import CLUSTER
 from fitting_models import Fitter, MY_METHOD, LINEAR, LOG, MAGE
 
 types = {
@@ -25,6 +27,7 @@ def analysis():
         fitter.create_results_graph(x, y_test, cg_names[i], type=MY_METHOD, optimal=True, v=2)
         fitter.create_age_aacordionicity_graph()
         fitter.create_results_graph(x, y_test, cg_names[i], type=MY_METHOD, optimal=True, v=3)
+        a = fitter.get_vector()
         fitter.create_age_aacordionicity_graph()
         fitter.create_results_graph(x, y_test, cg_names[i], type=LINEAR)
         fitter.create_results_graph(x, y_test, cg_names[i], type=LOG)
@@ -38,7 +41,7 @@ def analysis():
 # for 10 random points: 2.02
 # for 50: 1.92
 # for 100: 1.91
-def calculate_stability():
+def calculate_mse_stats():
     interesting_points, interesting_cgs = utils.get_interesting_points()
     ages, train, test, cg_names = utils.get_data()
     errors_our = []
@@ -73,3 +76,27 @@ def calculate_stability():
     print(np.sum(errors_our) / len(errors_our))
     # print(np.sum(errors_lin)/len(errors_lin))
     # print(np.sum(errors_log)/len(errors_log))
+
+
+def clustering():
+    # interesting_points, interesting_cgs = utils.get_interesting_points()
+    # ages, train, test, cg_names = utils.get_data()
+    # vectors = []
+    # for i in interesting_points:
+    #     print(i)
+    #     y = train[i]
+    #     x = ages
+    #     fitter = Fitter(x, y)
+    #     fitter.fit_my(optimal=True, v=3)
+    #     vectors.append(fitter.get_vector())
+    # vectors = np.array(vectors)
+    # np.save("vectors.npy", vectors)
+    vectors = np.load("vectors.npy")
+    vectors = np.delete(vectors, 165, 0)
+    vectors = np.delete(vectors, 173, 0)
+    vectors = np.delete(vectors, 204, 0)
+    # 165, 174, 206
+    c = CLUSTER()
+    groups = c.cluster_pca(vectors)
+    plt.hist(groups)
+    plt.show()
