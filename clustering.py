@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 
 KNN = 1
-AMOUNT_OF_GROUPS = 5
+AMOUNT_OF_GROUPS = 15
 
 
 class CLUSTER:
@@ -16,4 +16,4 @@ class CLUSTER:
         # vectors - list of vector
         pca = PCA(n_components=AMOUNT_OF_GROUPS)
         result = pca.fit_transform(np.array(vectors))
-        return np.argmax(result,axis=1)
+        return np.argmax(result,axis=1), np.abs(pca.components_)

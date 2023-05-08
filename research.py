@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 import utils
-from clustering import CLUSTER
+from clustering import CLUSTER, AMOUNT_OF_GROUPS
 from fitting_models import Fitter, MY_METHOD, LINEAR, LOG, MAGE
 
 types = {
@@ -97,6 +97,10 @@ def clustering():
     vectors = np.delete(vectors, 204, 0)
     # 165, 174, 206
     c = CLUSTER()
-    groups = c.cluster_pca(vectors)
-    plt.hist(groups)
+    groups, vectors = c.cluster_pca(vectors)
+    plt.hist(groups, bins=AMOUNT_OF_GROUPS)
+    plt.show()
+    plt.plot(vectors[0])
+    plt.show()
+    plt.plot(vectors[-1])
     plt.show()
