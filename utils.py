@@ -40,6 +40,7 @@ def plot_graph_nicely(x_s, y_s, title, org=True):
     plt.show()
 
 
+# 2374 sites
 def get_data():
     data = get_12K_data()
     ages = data["XX"]
