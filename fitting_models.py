@@ -57,8 +57,10 @@ class Fitter:
         return self
 
     def fit_mAge(self):
-        self.fit_log(to_20=True)
-        self.fit_linear(to_20=True)
+        org_x = np.copy(self.x)
+        self.x = self.mAge_transform(self.x)
+        self.fit_linear()
+        self.x = org_x
         self.method = MAGE
         return self
 
@@ -77,11 +79,8 @@ class Fitter:
         elif self.method == LOG:
             return self.fitted_data["a"] * np.log(self.fitted_data["b"] * (x + self.fitted_data["c"]))
         elif self.method == MAGE:
-            mask_to = (x <= 20)
-            mask_from = (x > 20)
-            first_part = self.fitted_data["a"] * np.log(self.fitted_data["b"] * (x[mask_to] + self.fitted_data["c"]))
-            second_part = self.fitted_data["gradient"] * x[mask_from] + self.fitted_data["intercept"]
-            return np.concatenate([first_part, second_part])
+            x_data = self.mAge_transform(x)
+            return self.fitted_data["gradient"] * x_data + self.fitted_data["intercept"]
         elif self.method == MY_METHOD:
             return self.my_fitter.predict(x)
 
@@ -124,3 +123,10 @@ class Fitter:
         utils.plot_graph_nicely([x, x_to_fit, x_test], [y, fitted, y_test],
                                 cg_name + " " + name_of_type[type] + ", loss = " + str(
                                     round(fitter.score(x_test[test_mask], y_test[test_mask]), 2)))
+
+    def mAge_transform(self, x):
+        res = np.array(x, dtype="float64")
+        mask = (x <= 20)
+        res[mask] = np.log2(res[mask]+1) - np.log2(21)
+        res[~mask] = (res[~mask] - 20)/21
+        return res

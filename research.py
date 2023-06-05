@@ -54,16 +54,16 @@ def calculate_mse_stats():
         x = ages
         fitter = Fitter(x, y)
         # fitter.create_results_graph(x, y_test, type=MAGE)
-        # fitter.fit_mAge()
-        # score = fitter.score(x, y_test)
-        # if score == score:
-        #     errors_our.append(score)
-        #     print(errors_our[-1])
-        fitter.fit_my(optimal=True, v=3)
+        fitter.fit_mAge()
         score = fitter.score(x, y_test)
         if score == score:
             errors_our.append(score)
             print(errors_our[-1])
+        # fitter.fit_my(optimal=True, v=3)
+        # score = fitter.score(x, y_test)
+        # if score == score:
+        #     errors_our.append(score)
+        #     print(errors_our[-1])
         # fitter.fit_linear()
         # score = fitter.score(x, y_test)
         # if score != np.nan:

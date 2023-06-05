@@ -5,9 +5,10 @@ from research import analysis, calculate_mse_stats, clustering, create_cg_cluste
 
 
 def main():
-    # examples(plot=False, amount =2374)
-    create_cg_cluster_genes()
+    # examples(plot=True, amount =20)
+    # create_cg_cluster_genes()
     # clustering()
+    calculate_mse_stats()
 
 
 if __name__ == '__main__':
