@@ -130,3 +130,10 @@ class Fitter:
         res[mask] = np.log2(res[mask]+1) - np.log2(21)
         res[~mask] = (res[~mask] - 20)/21
         return res
+
+# about genes - add the graphs
+# discussin:
+# future work - what we want to do
+# how much research questions
+# what have we tried
+# weaknesses of the model

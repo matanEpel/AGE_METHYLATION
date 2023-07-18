@@ -159,3 +159,38 @@ def clustering():
     plt.show()
     plt.plot(vectors[4])
     plt.show()
+
+def clustering2():
+    # interesting_points, interesting_cgs = utils.get_interesting_points()
+    ages, train, test, cg_names = utils.get_data()
+    # vectors = []
+    # for i in range(len(cg_names)):
+    #     print(i)
+    #     y = train[i]
+    #     x = ages
+    #     fitter = Fitter(x, y)
+    #     fitter.fit_my(optimal=True, v=3)
+    #     vectors.append(fitter.get_vector())
+    # vectors = np.array(vectors)
+    # np.save("all_vectors.npy", vectors)
+    vectors = np.load("all_vectors.npy")
+    vectors = vectors[~np.isnan(vectors).any(axis=1)]
+    # 165, 174, 206
+    c = CLUSTER()
+    clusters = c.cluster_pca_kmeans(vectors)
+    groups = [[] for _ in range(AMOUNT_OF_GROUPS)]
+    for i in range(len(vectors)):
+        groups[clusters[i]].append(vectors[i])
+    for i in range(AMOUNT_OF_GROUPS):
+        for v in groups[i]:
+            plt.plot(v, linestyle='dashed', linewidth=0.15)
+        plt.plot(np.median(np.array(groups[i]), axis=0), color="black", linewidth=1.5, label="meadian")
+        plt.plot(np.average(np.array(groups[i]), axis=0), color="m", linewidth=1.5, label="average")
+        plt.xlabel("age")
+        plt.ylabel("accordionicity")
+        plt.title(f"group {i}, number of sites = {len(groups[i])}")
+        plt.legend()
+        plt.show()
+    plt.hist(clusters, bins=AMOUNT_OF_GROUPS)
+    plt.show()
+
